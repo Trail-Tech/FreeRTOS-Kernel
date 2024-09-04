@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel <DEVELOPMENT BRANCH>
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -40,6 +40,10 @@
 #include <mmsystem.h>
 #include <winbase.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************
 *   Defines
 ******************************************************************************/
@@ -72,9 +76,18 @@ typedef portSTACK_TYPE           StackType_t;
     typedef uint32_t             TickType_t;
     #define portMAX_DELAY              ( TickType_t ) 0xffffffffUL
 
-/* 32/64-bit tick type on a 32/64-bit architecture, so reads of the tick
+/* 32-bit tick type on a 32/64-bit architecture, so reads of the tick
  * count do not need to be guarded with a critical section. */
     #define portTICK_TYPE_IS_ATOMIC    1
+#elif ( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_64_BITS )
+    typedef uint64_t             TickType_t;
+    #define portMAX_DELAY              ( TickType_t ) 0xffffffffffffffffULL
+
+#if defined( __x86_64__ ) || defined( _M_X64 )
+/* 64-bit tick type on a 64-bit architecture, so reads of the tick
+ * count do not need to be guarded with a critical section. */
+    #define portTICK_TYPE_IS_ATOMIC    1
+#endif
 #else
     #error configTICK_TYPE_WIDTH_IN_BITS set to unsupported tick type width.
 #endif
@@ -121,32 +134,50 @@ void vPortExitCritical( void );
     #define configUSE_PORT_OPTIMISED_TASK_SELECTION    1
 #endif
 
+/*-----------------------------------------------------------*/
+
 #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 
-/* Check the configuration. */
+    /* Check the configuration. */
     #if ( configMAX_PRIORITIES > 32 )
         #error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
     #endif
 
-/* Store/clear the ready priorities in a bit map. */
-    #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities )    ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
-    #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities )     ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
-
-
-/*-----------------------------------------------------------*/
+    /* Store/clear the ready priorities in a bit map. */
+    #define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities )    ( uxReadyPriorities ) |= ( ( ( UBaseType_t ) 1 ) << ( uxPriority ) )
+    #define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities )     ( uxReadyPriorities ) &= ~( ( ( UBaseType_t ) 1 ) << ( uxPriority ) )
 
     #ifdef __GNUC__
-        #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) \
-    __asm volatile ( "bsr %1, %0\n\t"                                        \
-                     : "=r" ( uxTopPriority ) : "rm" ( uxReadyPriorities ) : "cc" )
-    #else
 
-/* BitScanReverse returns the bit position of the most significant '1'
- * in the word. */
-        #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    _BitScanReverse( ( DWORD * ) &( uxTopPriority ), ( uxReadyPriorities ) )
+        #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    \
+        __asm volatile ( "bsr %1, %0\n\t"                                       \
+                         : "=r" ( uxTopPriority )                               \
+                         : "rm" ( uxReadyPriorities )                           \
+                         : "cc" )
+
+    #else /* __GNUC__ */
+
+        /* BitScanReverse returns the bit position of the most significant '1'
+         * in the word. */
+        #if defined( __x86_64__ ) || defined( _M_X64 )
+
+            #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    \
+            do                                                                      \
+            {                                                                       \
+                DWORD ulTopPriority;                                                \
+                _BitScanReverse64( &ulTopPriority, ( uxReadyPriorities ) );         \
+                uxTopPriority = ulTopPriority;                                      \
+            } while( 0 )
+
+        #else /* #if defined( __x86_64__ ) || defined( _M_X64 ) */
+
+            #define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )    _BitScanReverse( ( DWORD * ) &( uxTopPriority ), ( uxReadyPriorities ) )
+
+        #endif /* #if defined( __x86_64__ ) || defined( _M_X64 ) */
+
     #endif /* __GNUC__ */
 
-#endif /* taskRECORD_READY_PRIORITY */
+#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 
 #ifndef __GNUC__
     __pragma( warning( disable:4211 ) ) /* Nonstandard extension used, as extern is only nonstandard to MSVC. */
@@ -157,8 +188,9 @@ void vPortExitCritical( void );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )    void vFunction( void * pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters )          void vFunction( void * pvParameters )
 
-#define portINTERRUPT_YIELD    ( 0UL )
-#define portINTERRUPT_TICK     ( 1UL )
+#define portINTERRUPT_YIELD                        ( 0UL )
+#define portINTERRUPT_TICK                         ( 1UL )
+#define portINTERRUPT_APPLICATION_DEFINED_START    ( 2UL )
 
 /*
  * Raise a simulated interrupt represented by the bit mask in ulInterruptMask.
@@ -166,6 +198,14 @@ void vPortExitCritical( void );
  * two bits being used for the Yield and Tick interrupts respectively.
  */
 void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber );
+
+/*
+ * Raise a simulated interrupt represented by the bit mask in ulInterruptMask.
+ * Each bit can be used to represent an individual interrupt - with the first
+ * two bits being used for the Yield and Tick interrupts respectively. This function
+ * can be called in a windows thread.
+ */
+void vPortGenerateSimulatedInterruptFromWindowsThread( uint32_t ulInterruptNumber );
 
 /*
  * Install an interrupt handler to be called by the simulated interrupt handler
@@ -178,5 +218,9 @@ void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber );
  */
 void vPortSetInterruptHandler( uint32_t ulInterruptNumber,
                                uint32_t ( * pvHandler )( void ) );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ifndef PORTMACRO_H */

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel <DEVELOPMENT BRANCH>
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -669,7 +669,7 @@ void vPortSetupTimerInterrupt( void )
              *
              * The following links provide detailed information:
              * https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html
-             * https://www.FreeRTOS.org/FAQHelp.html */
+             * https://www.freertos.org/Why-FreeRTOS/FAQs */
             configASSERT( ucCurrentPriority >= ucMaxSysCallPriority );
         }
 

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel <DEVELOPMENT BRANCH>
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -34,7 +34,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#ifndef __VFP_FP__
+#ifndef __ARM_FP
     #error This port can only be used when the project options are configured to enable hardware floating point support.
 #endif
 
@@ -300,7 +300,7 @@ static void prvPortStartFirstTask( void )
 BaseType_t xPortStartScheduler( void )
 {
     /* An application can install FreeRTOS interrupt handlers in one of the
-     * folllowing ways:
+     * following ways:
      * 1. Direct Routing - Install the functions vPortSVCHandler and
      *    xPortPendSVHandler for SVCall and PendSV interrupts respectively.
      * 2. Indirect Routing - Install separate handlers for SVCall and PendSV
@@ -323,7 +323,7 @@ BaseType_t xPortStartScheduler( void )
          *
          * Assertion failures here indicate incorrect installation of the
          * FreeRTOS handlers. For help installing the FreeRTOS handlers, see
-         * https://www.FreeRTOS.org/FAQHelp.html.
+         * https://www.freertos.org/Why-FreeRTOS/FAQs.
          *
          * Systems with a configurable address for the interrupt vector table
          * can also encounter assertion failures or even system faults here if
@@ -876,7 +876,7 @@ static void vPortEnableVFP( void )
              *
              * The following links provide detailed information:
              * https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html
-             * https://www.FreeRTOS.org/FAQHelp.html */
+             * https://www.freertos.org/Why-FreeRTOS/FAQs */
             configASSERT( ucCurrentPriority >= ucMaxSysCallPriority );
         }
 

@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel <DEVELOPMENT BRANCH>
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -166,73 +166,79 @@ typedef void ( * portISR_t )( void );
 /**
  * @brief Constants required to manipulate the MPU.
  */
-#define portMPU_TYPE_REG                        ( *( ( volatile uint32_t * ) 0xe000ed90 ) )
-#define portMPU_CTRL_REG                        ( *( ( volatile uint32_t * ) 0xe000ed94 ) )
-#define portMPU_RNR_REG                         ( *( ( volatile uint32_t * ) 0xe000ed98 ) )
+#define portMPU_TYPE_REG                            ( *( ( volatile uint32_t * ) 0xe000ed90 ) )
+#define portMPU_CTRL_REG                            ( *( ( volatile uint32_t * ) 0xe000ed94 ) )
+#define portMPU_RNR_REG                             ( *( ( volatile uint32_t * ) 0xe000ed98 ) )
 
-#define portMPU_RBAR_REG                        ( *( ( volatile uint32_t * ) 0xe000ed9c ) )
-#define portMPU_RLAR_REG                        ( *( ( volatile uint32_t * ) 0xe000eda0 ) )
+#define portMPU_RBAR_REG                            ( *( ( volatile uint32_t * ) 0xe000ed9c ) )
+#define portMPU_RLAR_REG                            ( *( ( volatile uint32_t * ) 0xe000eda0 ) )
 
-#define portMPU_RBAR_A1_REG                     ( *( ( volatile uint32_t * ) 0xe000eda4 ) )
-#define portMPU_RLAR_A1_REG                     ( *( ( volatile uint32_t * ) 0xe000eda8 ) )
+#define portMPU_RBAR_A1_REG                         ( *( ( volatile uint32_t * ) 0xe000eda4 ) )
+#define portMPU_RLAR_A1_REG                         ( *( ( volatile uint32_t * ) 0xe000eda8 ) )
 
-#define portMPU_RBAR_A2_REG                     ( *( ( volatile uint32_t * ) 0xe000edac ) )
-#define portMPU_RLAR_A2_REG                     ( *( ( volatile uint32_t * ) 0xe000edb0 ) )
+#define portMPU_RBAR_A2_REG                         ( *( ( volatile uint32_t * ) 0xe000edac ) )
+#define portMPU_RLAR_A2_REG                         ( *( ( volatile uint32_t * ) 0xe000edb0 ) )
 
-#define portMPU_RBAR_A3_REG                     ( *( ( volatile uint32_t * ) 0xe000edb4 ) )
-#define portMPU_RLAR_A3_REG                     ( *( ( volatile uint32_t * ) 0xe000edb8 ) )
+#define portMPU_RBAR_A3_REG                         ( *( ( volatile uint32_t * ) 0xe000edb4 ) )
+#define portMPU_RLAR_A3_REG                         ( *( ( volatile uint32_t * ) 0xe000edb8 ) )
 
-#define portMPU_MAIR0_REG                       ( *( ( volatile uint32_t * ) 0xe000edc0 ) )
-#define portMPU_MAIR1_REG                       ( *( ( volatile uint32_t * ) 0xe000edc4 ) )
+#define portMPU_MAIR0_REG                           ( *( ( volatile uint32_t * ) 0xe000edc0 ) )
+#define portMPU_MAIR1_REG                           ( *( ( volatile uint32_t * ) 0xe000edc4 ) )
 
-#define portMPU_RBAR_ADDRESS_MASK               ( 0xffffffe0 ) /* Must be 32-byte aligned. */
-#define portMPU_RLAR_ADDRESS_MASK               ( 0xffffffe0 ) /* Must be 32-byte aligned. */
+#define portMPU_RBAR_ADDRESS_MASK                   ( 0xffffffe0 ) /* Must be 32-byte aligned. */
+#define portMPU_RLAR_ADDRESS_MASK                   ( 0xffffffe0 ) /* Must be 32-byte aligned. */
 
-#define portMPU_RBAR_ACCESS_PERMISSIONS_MASK    ( 3UL << 1UL )
+#define portMPU_RBAR_ACCESS_PERMISSIONS_MASK        ( 3UL << 1UL )
 
-#define portMPU_MAIR_ATTR0_POS                  ( 0UL )
-#define portMPU_MAIR_ATTR0_MASK                 ( 0x000000ff )
+#define portMPU_MAIR_ATTR0_POS                      ( 0UL )
+#define portMPU_MAIR_ATTR0_MASK                     ( 0x000000ff )
 
-#define portMPU_MAIR_ATTR1_POS                  ( 8UL )
-#define portMPU_MAIR_ATTR1_MASK                 ( 0x0000ff00 )
+#define portMPU_MAIR_ATTR1_POS                      ( 8UL )
+#define portMPU_MAIR_ATTR1_MASK                     ( 0x0000ff00 )
 
-#define portMPU_MAIR_ATTR2_POS                  ( 16UL )
-#define portMPU_MAIR_ATTR2_MASK                 ( 0x00ff0000 )
+#define portMPU_MAIR_ATTR2_POS                      ( 16UL )
+#define portMPU_MAIR_ATTR2_MASK                     ( 0x00ff0000 )
 
-#define portMPU_MAIR_ATTR3_POS                  ( 24UL )
-#define portMPU_MAIR_ATTR3_MASK                 ( 0xff000000 )
+#define portMPU_MAIR_ATTR3_POS                      ( 24UL )
+#define portMPU_MAIR_ATTR3_MASK                     ( 0xff000000 )
 
-#define portMPU_MAIR_ATTR4_POS                  ( 0UL )
-#define portMPU_MAIR_ATTR4_MASK                 ( 0x000000ff )
+#define portMPU_MAIR_ATTR4_POS                      ( 0UL )
+#define portMPU_MAIR_ATTR4_MASK                     ( 0x000000ff )
 
-#define portMPU_MAIR_ATTR5_POS                  ( 8UL )
-#define portMPU_MAIR_ATTR5_MASK                 ( 0x0000ff00 )
+#define portMPU_MAIR_ATTR5_POS                      ( 8UL )
+#define portMPU_MAIR_ATTR5_MASK                     ( 0x0000ff00 )
 
-#define portMPU_MAIR_ATTR6_POS                  ( 16UL )
-#define portMPU_MAIR_ATTR6_MASK                 ( 0x00ff0000 )
+#define portMPU_MAIR_ATTR6_POS                      ( 16UL )
+#define portMPU_MAIR_ATTR6_MASK                     ( 0x00ff0000 )
 
-#define portMPU_MAIR_ATTR7_POS                  ( 24UL )
-#define portMPU_MAIR_ATTR7_MASK                 ( 0xff000000 )
+#define portMPU_MAIR_ATTR7_POS                      ( 24UL )
+#define portMPU_MAIR_ATTR7_MASK                     ( 0xff000000 )
 
-#define portMPU_RLAR_ATTR_INDEX0                ( 0UL << 1UL )
-#define portMPU_RLAR_ATTR_INDEX1                ( 1UL << 1UL )
-#define portMPU_RLAR_ATTR_INDEX2                ( 2UL << 1UL )
-#define portMPU_RLAR_ATTR_INDEX3                ( 3UL << 1UL )
-#define portMPU_RLAR_ATTR_INDEX4                ( 4UL << 1UL )
-#define portMPU_RLAR_ATTR_INDEX5                ( 5UL << 1UL )
-#define portMPU_RLAR_ATTR_INDEX6                ( 6UL << 1UL )
-#define portMPU_RLAR_ATTR_INDEX7                ( 7UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX0                    ( 0UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX1                    ( 1UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX2                    ( 2UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX3                    ( 3UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX4                    ( 4UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX5                    ( 5UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX6                    ( 6UL << 1UL )
+#define portMPU_RLAR_ATTR_INDEX7                    ( 7UL << 1UL )
 
-#define portMPU_RLAR_REGION_ENABLE              ( 1UL )
+#define portMPU_RLAR_REGION_ENABLE                  ( 1UL )
+
+#if ( portARMV8M_MINOR_VERSION >= 1 )
+    /* Enable Privileged eXecute Never MPU attribute for the selected memory
+     * region. */
+    #define portMPU_RLAR_PRIVILEGED_EXECUTE_NEVER   ( 1UL << 4UL )
+#endif /* portARMV8M_MINOR_VERSION >= 1 */
 
 /* Enable privileged access to unmapped region. */
-#define portMPU_PRIV_BACKGROUND_ENABLE_BIT      ( 1UL << 2UL )
+#define portMPU_PRIV_BACKGROUND_ENABLE_BIT          ( 1UL << 2UL )
 
 /* Enable MPU. */
-#define portMPU_ENABLE_BIT                      ( 1UL << 0UL )
+#define portMPU_ENABLE_BIT                          ( 1UL << 0UL )
 
 /* Expected value of the portMPU_TYPE register. */
-#define portEXPECTED_MPU_TYPE_VALUE             ( configTOTAL_MPU_REGIONS << 8UL )
+#define portEXPECTED_MPU_TYPE_VALUE                 ( configTOTAL_MPU_REGIONS << 8UL )
 
 /* Extract first address of the MPU region as encoded in the
  * RBAR (Region Base Address Register) value. */
@@ -496,14 +502,14 @@ portDONT_DISCARD void vPortSVCHandler_C( uint32_t * pulCallerStackAddress ) PRIV
 #endif /* configENABLE_MPU == 1 */
 /*-----------------------------------------------------------*/
 
-#if ( ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) && ( configENABLE_ACCESS_CONTROL_LIST == 1 ) )
+#if ( ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) )
 
 /**
  * @brief This variable is set to pdTRUE when the scheduler is started.
  */
     PRIVILEGED_DATA static BaseType_t xSchedulerRunning = pdFALSE;
 
-#endif
+#endif /* ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) */
 
 /**
  * @brief Each task maintains its own interrupt status in the critical nesting
@@ -555,6 +561,7 @@ PRIVILEGED_DATA static volatile uint32_t ulCriticalNesting = 0xaaaaaaaaUL;
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TICKLESS_IDLE == 1 )
+
     __attribute__( ( weak ) ) void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
     {
         uint32_t ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickDecrements, ulSysTickDecrementsLeft;
@@ -770,6 +777,7 @@ PRIVILEGED_DATA static volatile uint32_t ulCriticalNesting = 0xaaaaaaaaUL;
             __asm volatile ( "cpsie i" ::: "memory" );
         }
     }
+
 #endif /* configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
 
@@ -827,6 +835,7 @@ static void prvTaskExitError( void )
 /*-----------------------------------------------------------*/
 
 #if ( configENABLE_MPU == 1 )
+
     static uint32_t prvGetRegionAccessPermissions( uint32_t ulRBARValue ) /* PRIVILEGED_FUNCTION */
     {
         uint32_t ulAccessPermissions = 0;
@@ -843,10 +852,12 @@ static void prvTaskExitError( void )
 
         return ulAccessPermissions;
     }
+
 #endif /* configENABLE_MPU */
 /*-----------------------------------------------------------*/
 
 #if ( configENABLE_MPU == 1 )
+
     static void prvSetupMPU( void ) /* PRIVILEGED_FUNCTION */
     {
         #if defined( __ARMCC_VERSION )
@@ -935,10 +946,12 @@ static void prvTaskExitError( void )
             portMPU_CTRL_REG |= ( portMPU_PRIV_BACKGROUND_ENABLE_BIT | portMPU_ENABLE_BIT );
         }
     }
+
 #endif /* configENABLE_MPU */
 /*-----------------------------------------------------------*/
 
 #if ( configENABLE_FPU == 1 )
+
     static void prvSetupFPU( void ) /* PRIVILEGED_FUNCTION */
     {
         #if ( configENABLE_TRUSTZONE == 1 )
@@ -960,6 +973,7 @@ static void prvTaskExitError( void )
          * LSPEN = 1 ==> Enable lazy context save of FP state. */
         *( portFPCCR ) |= ( portFPCCR_ASPEN_MASK | portFPCCR_LSPEN_MASK );
     }
+
 #endif /* configENABLE_FPU */
 /*-----------------------------------------------------------*/
 
@@ -1613,7 +1627,7 @@ void vPortSVCHandler_C( uint32_t * pulCallerStackAddress ) /* PRIVILEGED_FUNCTIO
 BaseType_t xPortStartScheduler( void ) /* PRIVILEGED_FUNCTION */
 {
     /* An application can install FreeRTOS interrupt handlers in one of the
-     * folllowing ways:
+     * following ways:
      * 1. Direct Routing - Install the functions SVC_Handler and PendSV_Handler
      *    for SVCall and PendSV interrupts respectively.
      * 2. Indirect Routing - Install separate handlers for SVCall and PendSV
@@ -1636,7 +1650,7 @@ BaseType_t xPortStartScheduler( void ) /* PRIVILEGED_FUNCTION */
          *
          * Assertion failures here indicate incorrect installation of the
          * FreeRTOS handlers. For help installing the FreeRTOS handlers, see
-         * https://www.FreeRTOS.org/FAQHelp.html.
+         * https://www.freertos.org/Why-FreeRTOS/FAQs.
          *
          * Systems with a configurable address for the interrupt vector table
          * can also encounter assertion failures or even system faults here if
@@ -1740,11 +1754,11 @@ BaseType_t xPortStartScheduler( void ) /* PRIVILEGED_FUNCTION */
     /* Initialize the critical nesting count ready for the first task. */
     ulCriticalNesting = 0;
 
-    #if ( ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) && ( configENABLE_ACCESS_CONTROL_LIST == 1 ) )
+    #if ( ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) )
     {
         xSchedulerRunning = pdTRUE;
     }
-    #endif
+    #endif /* ( ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) ) */
 
     /* Start the first task. */
     vStartFirstTask();
@@ -1772,10 +1786,11 @@ void vPortEndScheduler( void ) /* PRIVILEGED_FUNCTION */
 /*-----------------------------------------------------------*/
 
 #if ( configENABLE_MPU == 1 )
+
     void vPortStoreTaskMPUSettings( xMPU_SETTINGS * xMPUSettings,
                                     const struct xMEMORY_REGION * const xRegions,
                                     StackType_t * pxBottomOfStack,
-                                    uint32_t ulStackDepth )
+                                    configSTACK_DEPTH_TYPE uxStackDepth )
     {
         uint32_t ulRegionStartAddress, ulRegionEndAddress, ulRegionNumber;
         int32_t lIndex = 0;
@@ -1800,10 +1815,10 @@ void vPortEndScheduler( void ) /* PRIVILEGED_FUNCTION */
          * which case the stack region parameters will be valid.  At all other
          * times the stack parameters will not be valid and it is assumed that
          * the stack region has already been configured. */
-        if( ulStackDepth > 0 )
+        if( uxStackDepth > 0 )
         {
             ulRegionStartAddress = ( uint32_t ) pxBottomOfStack;
-            ulRegionEndAddress = ( uint32_t ) pxBottomOfStack + ( ulStackDepth * ( uint32_t ) sizeof( StackType_t ) ) - 1;
+            ulRegionEndAddress = ( uint32_t ) pxBottomOfStack + ( uxStackDepth * ( configSTACK_DEPTH_TYPE ) sizeof( StackType_t ) ) - 1;
 
             /* If the stack is within the privileged SRAM, do not protect it
              * using a separate MPU region. This is needed because privileged
@@ -1871,6 +1886,16 @@ void vPortEndScheduler( void ) /* PRIVILEGED_FUNCTION */
                 xMPUSettings->xRegionsSettings[ ulRegionNumber ].ulRLAR = ( ulRegionEndAddress ) |
                                                                           ( portMPU_RLAR_REGION_ENABLE );
 
+                /* PXN. */
+                #if ( portARMV8M_MINOR_VERSION >= 1 )
+                {
+                    if( ( xRegions[ lIndex ].ulParameters & tskMPU_REGION_PRIVILEGED_EXECUTE_NEVER ) != 0 )
+                    {
+                        xMPUSettings->xRegionsSettings[ ulRegionNumber ].ulRLAR |= ( portMPU_RLAR_PRIVILEGED_EXECUTE_NEVER );
+                    }
+                }
+                #endif /* portARMV8M_MINOR_VERSION >= 1 */
+
                 /* Normal memory/ Device memory. */
                 if( ( xRegions[ lIndex ].ulParameters & tskMPU_REGION_DEVICE_MEMORY ) != 0 )
                 {
@@ -1893,10 +1918,12 @@ void vPortEndScheduler( void ) /* PRIVILEGED_FUNCTION */
             lIndex++;
         }
     }
+
 #endif /* configENABLE_MPU */
 /*-----------------------------------------------------------*/
 
-#if ( configENABLE_MPU == 1 )
+#if ( ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) )
+
     BaseType_t xPortIsAuthorizedToAccessBuffer( const void * pvBuffer,
                                                 uint32_t ulBufferLength,
                                                 uint32_t ulAccessRequested ) /* PRIVILEGED_FUNCTION */
@@ -1949,7 +1976,8 @@ void vPortEndScheduler( void ) /* PRIVILEGED_FUNCTION */
 
         return xAccessGranted;
     }
-#endif /* configENABLE_MPU */
+
+#endif /* #if ( configENABLE_MPU == 1 ) && ( configUSE_MPU_WRAPPERS_V1 == 0 ) */
 /*-----------------------------------------------------------*/
 
 BaseType_t xPortIsInsideInterrupt( void )
@@ -2013,7 +2041,7 @@ BaseType_t xPortIsInsideInterrupt( void )
              *
              * The following links provide detailed information:
              * https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html
-             * https://www.FreeRTOS.org/FAQHelp.html */
+             * https://www.freertos.org/Why-FreeRTOS/FAQs */
             configASSERT( ucCurrentPriority >= ucMaxSysCallPriority );
         }
 

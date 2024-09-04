@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel <DEVELOPMENT BRANCH>
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -30,7 +30,7 @@
  * This is a simple main that will start the FreeRTOS-Kernel and run a periodic task
  * that only delays if compiled with the template port, this project will do nothing.
  * For more information on getting started please look here:
- * https://freertos.org/FreeRTOS-quick-start-guide.html
+ * https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/02-Quick-start-guide
  */
 
 /* FreeRTOS includes. */
@@ -43,7 +43,13 @@
 /* Standard includes. */
 #include <stdio.h>
 
-void exampleTask( void * parameters )
+/*-----------------------------------------------------------*/
+
+static void exampleTask( void * parameters ) __attribute__( ( noreturn ) );
+
+/*-----------------------------------------------------------*/
+
+static void exampleTask( void * parameters )
 {
     /* Unused parameters. */
     ( void ) parameters;
@@ -56,20 +62,20 @@ void exampleTask( void * parameters )
 }
 /*-----------------------------------------------------------*/
 
-void main( void )
+int main( void )
 {
     static StaticTask_t exampleTaskTCB;
     static StackType_t exampleTaskStack[ configMINIMAL_STACK_SIZE ];
 
-    printf( "Example FreeRTOS Project\n" );
+    ( void ) printf( "Example FreeRTOS Project\n" );
 
-    xTaskCreateStatic( exampleTask,
-                       "example",
-                       configMINIMAL_STACK_SIZE,
-                       NULL,
-                       configMAX_PRIORITIES - 1,
-                       &( exampleTaskStack[ 0 ] ),
-                       &( exampleTaskTCB ) );
+    ( void ) xTaskCreateStatic( exampleTask,
+                                "example",
+                                configMINIMAL_STACK_SIZE,
+                                NULL,
+                                configMAX_PRIORITIES - 1U,
+                                &( exampleTaskStack[ 0 ] ),
+                                &( exampleTaskTCB ) );
 
     /* Start the scheduler. */
     vTaskStartScheduler();
@@ -78,15 +84,21 @@ void main( void )
     {
         /* Should not reach here. */
     }
+
+    return 0;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t xTask,
-                                    char * pcTaskName )
-{
-    /* Check pcTaskName for the name of the offending task,
-     * or pxCurrentTCB if pcTaskName has itself been corrupted. */
-    ( void ) xTask;
-    ( void ) pcTaskName;
-}
+#if ( configCHECK_FOR_STACK_OVERFLOW > 0 )
+
+    void vApplicationStackOverflowHook( TaskHandle_t xTask,
+                                        char * pcTaskName )
+    {
+        /* Check pcTaskName for the name of the offending task,
+         * or pxCurrentTCB if pcTaskName has itself been corrupted. */
+        ( void ) xTask;
+        ( void ) pcTaskName;
+    }
+
+#endif /* #if ( configCHECK_FOR_STACK_OVERFLOW > 0 ) */
 /*-----------------------------------------------------------*/

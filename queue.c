@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel <DEVELOPMENT BRANCH>
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -247,7 +247,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength,
  * other tasks that are waiting for the same mutex.  This function returns
  * that priority.
  */
-    static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
+    static UBaseType_t prvGetHighestPriorityOfWaitToReceiveList( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
 #endif
 /*-----------------------------------------------------------*/
 
@@ -1190,7 +1190,10 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
      * read, instead return a flag to say whether a context switch is required or
      * not (i.e. has a task with a higher priority than us been woken by this
      * post). */
-    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+    /* MISRA Ref 4.7.1 [Return value shall be checked] */
+    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
+    /* coverity[misra_c_2012_directive_4_7_violation] */
+    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
     {
         if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
         {
@@ -1365,7 +1368,10 @@ BaseType_t xQueueGiveFromISR( QueueHandle_t xQueue,
      * link: https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
     portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+    /* MISRA Ref 4.7.1 [Return value shall be checked] */
+    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
+    /* coverity[misra_c_2012_directive_4_7_violation] */
+    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
     {
         const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 
@@ -1838,13 +1844,13 @@ BaseType_t xQueueSemaphoreTake( QueueHandle_t xQueue,
                              * has timed out the priority should be disinherited
                              * again, but only as low as the next highest priority
                              * task that is waiting for the same mutex. */
-                            uxHighestWaitingPriority = prvGetDisinheritPriorityAfterTimeout( pxQueue );
+                            uxHighestWaitingPriority = prvGetHighestPriorityOfWaitToReceiveList( pxQueue );
 
                             /* vTaskPriorityDisinheritAfterTimeout uses the uxHighestWaitingPriority
                              * parameter to index pxReadyTasksLists when adding the task holding
                              * mutex to the ready list for its new priority. Coverity thinks that
                              * it can result in out-of-bounds access which is not true because
-                             * uxHighestWaitingPriority, as returned by prvGetDisinheritPriorityAfterTimeout,
+                             * uxHighestWaitingPriority, as returned by prvGetHighestPriorityOfWaitToReceiveList,
                              * is capped at ( configMAX_PRIORITIES - 1 ). */
                             /* coverity[overrun] */
                             vTaskPriorityDisinheritAfterTimeout( pxQueue->u.xSemaphore.xMutexHolder, uxHighestWaitingPriority );
@@ -2055,7 +2061,10 @@ BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue,
      * link: https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
     portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+    /* MISRA Ref 4.7.1 [Return value shall be checked] */
+    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
+    /* coverity[misra_c_2012_directive_4_7_violation] */
+    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
     {
         const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 
@@ -2153,7 +2162,10 @@ BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue,
      * link: https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
     portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+    /* MISRA Ref 4.7.1 [Return value shall be checked] */
+    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
+    /* coverity[misra_c_2012_directive_4_7_violation] */
+    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
     {
         /* Cannot block in an ISR, so check there is data available. */
         if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
@@ -2350,7 +2362,7 @@ UBaseType_t uxQueueGetQueueLength( QueueHandle_t xQueue ) /* PRIVILEGED_FUNCTION
 
 #if ( configUSE_MUTEXES == 1 )
 
-    static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue )
+    static UBaseType_t prvGetHighestPriorityOfWaitToReceiveList( const Queue_t * const pxQueue )
     {
         UBaseType_t uxHighestPriorityOfWaitingTasks;
 
