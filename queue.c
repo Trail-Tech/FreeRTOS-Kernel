@@ -1329,6 +1329,7 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
 BaseType_t xQueueGiveFromISR( QueueHandle_t xQueue,
                               BaseType_t * const pxHigherPriorityTaskWoken )
 {
+    uint8_t agoodplaceforabreakpoint = 0;
     BaseType_t xReturn;
     UBaseType_t uxSavedInterruptStatus;
     Queue_t * const pxQueue = xQueue;
@@ -1342,6 +1343,11 @@ BaseType_t xQueueGiveFromISR( QueueHandle_t xQueue,
      * post). */
 
     configASSERT( pxQueue );
+
+    if (pxQueue->uxItemSize > 0)
+    {
+        agoodplaceforabreakpoint++;
+    }
 
     /* xQueueGenericSendFromISR() should be used instead of xQueueGiveFromISR()
      * if the item size is not 0. */
@@ -1495,7 +1501,15 @@ BaseType_t xQueueGiveFromISR( QueueHandle_t xQueue,
 
     traceRETURN_xQueueGiveFromISR( xReturn );
 
-    return xReturn;
+    if (agoodplaceforabreakpoint)
+    {
+        agoodplaceforabreakpoint = 0;
+        return xReturn;
+    }
+    else
+    {
+        return xReturn;
+    }    
 }
 /*-----------------------------------------------------------*/
 
